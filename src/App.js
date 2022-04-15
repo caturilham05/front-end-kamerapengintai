@@ -1,23 +1,21 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { Routes, Route, useLocation} from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
+import LoginComponents from "./components/Auth/LoginComponents";
+import NavbarComponents from "./components/NavbarComponents";
+import HomeComponents from "./components/HomeComponents";
+import RegisterComponents from "./components/Auth/RegisterComponents";
 
 function App() {
+  let { pathname } = useLocation();
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      {pathname === "/login" || pathname === "/register" ? null : <NavbarComponents />}
+      <Routes>
+        <Route path="/" element={<HomeComponents />} />
+        <Route path="/login" element={<LoginComponents />} />
+        <Route path="/register" element={<RegisterComponents />} />
+      </Routes>
     </div>
   );
 }

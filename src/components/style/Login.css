@@ -1,0 +1,8 @@
+.background{
+    background: url('http://kamerapengintai.com/images/modules/imageslider/6054868064bc1.png');
+    height: 100vh;
+    width: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
