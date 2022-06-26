@@ -6,6 +6,8 @@ import NavbarComponents from "./components/NavbarComponents";
 import HomeComponents from "./components/HomeComponents";
 import RegisterComponents from "./components/Auth/RegisterComponents";
 import ProductDetailComponents from "./components/Products/ProductDetailComponents";
+import ProductRelatedComponents from "./components/Products/ProductRelatedComponents";
+import ProductCartComponents from "./components/Products/ProductCartComponents";
 
 function App() {
   let { pathname } = useLocation();
@@ -17,6 +19,8 @@ function App() {
         <Route path="/login" element={<LoginComponents />} />
         <Route path="/register" element={<RegisterComponents />} />
         <Route path="/products/:productId" element={<ProductDetailComponents />} />
+        <Route path="/product_related/:catId" element={<ProductRelatedComponents />} />
+        <Route path="/cart/:userId" element={<ProductCartComponents />} />
       </Routes>
     </div>
   );

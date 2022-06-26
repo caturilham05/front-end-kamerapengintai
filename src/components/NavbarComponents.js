@@ -71,13 +71,23 @@ function NavbarComponents() {
                   </>
                 )}
                 <NavDropdown title={getName} id="collasible-nav-dropdown">
-                  <NavDropdown.Item href="#action/3.1">
-                    <CgProfile />
-                    &nbsp;Profile
+                  <NavDropdown.Item>
+                    <Link
+                      to={`/user`}
+                      style={{ textDecoration: "none", color: "black" }}
+                    >
+                      <CgProfile />
+                      &nbsp;Profile
+                    </Link>
                   </NavDropdown.Item>
-                  <NavDropdown.Item href="#action/3.1">
-                    <BsCart3 />
-                    &nbsp;Cart
+                  <NavDropdown.Item>
+                    <Link
+                      to={`/cart/${getId}`}
+                      style={{ textDecoration: "none", color: "black" }}
+                    >
+                      <BsCart3 />
+                      &nbsp;Cart
+                    </Link>
                   </NavDropdown.Item>
                   <NavDropdown.Divider />
                   <NavDropdown.Item>
