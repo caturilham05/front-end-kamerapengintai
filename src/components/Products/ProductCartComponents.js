@@ -9,6 +9,29 @@ const getIdUser = localStorage.getItem("id");
 
 function ProductCartComponents() {
   const [productCarts, setProductCarts] = useState([]);
+  const [num, setNum] = useState(productCarts.map(() => 1));
+  const [disabled, setDisabled] = useState(productCarts.map(() => false));
+
+  const incrementCounter = (index) => {
+    num[index] += 1;
+    setNum([...num]);
+    disabled[index] = false;
+    setDisabled([...disabled]);
+  };
+
+  const decrementCounter = (index) => {
+    if(num[index] > 1) {
+      disabled[index] = false;
+      setDisabled([...disabled]);
+      num[index] -= 1;
+      setNum([...num]);
+    }else{
+      num[index] = 1;
+      setNum([...num]);
+      disabled[index] = true;
+      setDisabled([...disabled]);
+    }
+  }
 
   useEffect(() => {
     const getProducts = async () => {
@@ -30,7 +53,6 @@ function ProductCartComponents() {
   }, []);
 
   let priceRandom = Math.floor(Math.random() * 100000 + 1);
-  console.log(productCarts);
   return (
     <>
       {productCarts.length === 0 ? (
@@ -50,8 +72,8 @@ function ProductCartComponents() {
                   <b>Keranjang Belanja</b>
                 </Card.Header>
                 <Container>
-                  {productCarts.map((item, index) => (
-                    <Card.Body key={index}>
+                  {productCarts.map((item, i) => (
+                    <Card.Body key={i}>
                       <Row>
                         <Col sm={4}>
                           <div
@@ -80,8 +102,8 @@ function ProductCartComponents() {
                                 e.target.onError = null;
                               }}
                               style={{
-                                width: "10rem",
-                                marginLeft: "2rem",
+                                width: "7.5rem",
+                                marginLeft: "1.5rem",
                                 cursor: "pointer",
                               }}
                             ></Card.Img>
@@ -104,7 +126,14 @@ function ProductCartComponents() {
                           </Card.Text>
                         </Col>
                       </Row>
-                      <div className="d-flex" style={{margin: "1rem", alignItems: "center", justifyContent: "space-between"}}>
+                      <div
+                        className="d-flex"
+                        style={{
+                          margin: "1rem",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                        }}
+                      >
                         <Form>
                           <Form.Group
                             className="mb-3"
@@ -112,13 +141,24 @@ function ProductCartComponents() {
                           >
                             <Form.Control
                               as="textarea"
-                              rows={3}
+                              rows={2}
                               placeholder="Catatan Tambahan (Pastikan tidak ada data pribadi)"
                             />
                           </Form.Group>
                         </Form>
-                        <span>Pindahkan ke Wishlist | <FiTrash2 /></span>
-                        <span>Pindahkan ke Wishlist | <FiTrash2 /></span>
+                        <span>
+                          Pindahkan ke Wishlist | <FiTrash2 />
+                        </span>
+                        <span>
+                          <button className="btn btn-secondary" style={{marginLeft: "1rem", marginRight: "1rem"}} disabled={disabled[i]} onClick = {() => decrementCounter(i)} type="button">-</button>
+                            <span>{num[i]}</span>
+                          <button className="btn btn-secondary" style={{marginLeft: "1rem", marginRight: "1rem"}} onClick = {() => incrementCounter(i)} type="button">+</button>
+                          {/* <ButtonDecrement onClickFunc={decrementCounter} /> */}
+                          {/* <ButtonDecrement disabled={disabled[i]} onClick = {() => decrementCounter(index)} /> */}
+                          {/* <Display message={num[index]} /> */}
+                          {/* <span>{num[index]}</span> */}
+                          {/* <ButtonIncrement onClick = {() => incrementCounter(index)} /> */}
+                        </span>
                       </div>
                     </Card.Body>
                   ))}
