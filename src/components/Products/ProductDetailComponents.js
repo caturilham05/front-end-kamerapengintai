@@ -17,6 +17,7 @@ import "../style/Category.css";
 
 const api = "http://127.0.0.1:8000/";
 const getToken = localStorage.getItem("token");
+const getIdUser = localStorage.getItem("id");
 
 function ButtonIncrement(props) {
   return (
@@ -48,7 +49,7 @@ function Display(props) {
 function ProductDetailComponents() {
   const { productId } = useParams();
   const [productDetail, setProductDetail] = useState([]);
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(1);
   const incrementCounter = () => setCount(count + 1);
   let decrementCounter = () => setCount(count - 1);
   // eslint-disable-next-line no-eval
@@ -76,7 +77,8 @@ function ProductDetailComponents() {
     };
     getProductDetail();
   }, [productId]);
-  const addToCart = async (productId) => {
+
+  const addToCart = async (productId, e) => {
     if (!getToken) {
       alert(
         "Silahkan login terlebih dahulu untuk menambahkan produk ke keranjang"
@@ -86,6 +88,27 @@ function ProductDetailComponents() {
     }
     // eslint-disable-next-line eqeqeq
     if (productDetail.id == productId) {
+      e.preventDefault();
+      const data = {
+        user_id: getIdUser,
+        product_id: productId,
+        qty: count,
+        stock: productDetail.qty_available,
+      };
+
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${getToken}`,
+      };
+      await axios
+        .post(api + "api/product_cart", data, { headers: headers })
+        .then((res) => {
+          if (res.status === 200) {
+            alert(res.data.message);
+          } else {
+            alert(res.data.message);
+          }
+        });
     }
     return productId;
   };
@@ -279,6 +302,7 @@ function ProductDetailComponents() {
                     {...(productDetail.qty_available > 0
                       ? ""
                       : { disabled: true })}
+                    // eslint-disable-next-line react/jsx-no-duplicate-props
                   >
                     <BsCart3 />
                     &nbsp;

@@ -9,29 +9,54 @@ const getIdUser = localStorage.getItem("id");
 
 function ProductCartComponents() {
   const [productCarts, setProductCarts] = useState([]);
-  const [num, setNum] = useState(productCarts.map(() => 1));
-  const [disabled, setDisabled] = useState(productCarts.map(() => false));
 
-  const incrementCounter = (index) => {
-    num[index] += 1;
-    setNum([...num]);
-    disabled[index] = false;
-    setDisabled([...disabled]);
+  const decrementCounter = async (cart_id) => {
+    setProductCarts((productCarts) =>
+      productCarts.map((item) =>
+        cart_id === item.id
+          ? {
+              ...item,
+              qty: item.qty - (item.qty > 1 ? 1 : 0),
+            }
+          : item
+      )
+    );
+    const data = {
+      qty: 1,
+    };
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${getToken}`,
+    };
+
+    await axios
+      .post(api + "api/product_cart_decrement/" + cart_id, data, { headers })
+      .then((res) => {
+        if(res.data.is_delete !== undefined)
+        {
+          window.location.reload();
+        }
+      });
   };
 
-  const decrementCounter = (index) => {
-    if(num[index] > 1) {
-      disabled[index] = false;
-      setDisabled([...disabled]);
-      num[index] -= 1;
-      setNum([...num]);
-    }else{
-      num[index] = 1;
-      setNum([...num]);
-      disabled[index] = true;
-      setDisabled([...disabled]);
-    }
-  }
+  const incrementCounter = async (cart_id) => {
+    setProductCarts((productCarts) =>
+      productCarts.map((item) =>
+        cart_id === item.id ? { ...item, qty: item.qty + 1 } : item
+      )
+    );
+    const data = {
+      qty: 1,
+    };
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${getToken}`,
+    };
+
+    await axios
+      .post(api + "api/product_cart_increment/" + cart_id, data, { headers })
+      .then((res) => {});
+  };
 
   useEffect(() => {
     const getProducts = async () => {
@@ -150,9 +175,23 @@ function ProductCartComponents() {
                           Pindahkan ke Wishlist | <FiTrash2 />
                         </span>
                         <span>
-                          <button className="btn btn-secondary" style={{marginLeft: "1rem", marginRight: "1rem"}} disabled={disabled[i]} onClick = {() => decrementCounter(i)} type="button">-</button>
-                            <span>{num[i]}</span>
-                          <button className="btn btn-secondary" style={{marginLeft: "1rem", marginRight: "1rem"}} onClick = {() => incrementCounter(i)} type="button">+</button>
+                          <button
+                            className="btn btn-secondary"
+                            style={{ marginLeft: "1rem", marginRight: "1rem" }}
+                            onClick={() => decrementCounter(item.id)}
+                            type="button"
+                          >
+                            -
+                          </button>
+                          <span>{item.qty}</span>
+                          <button
+                            className="btn btn-secondary"
+                            style={{ marginLeft: "1rem", marginRight: "1rem" }}
+                            onClick={() => incrementCounter(item.id)}
+                            type="button"
+                          >
+                            +
+                          </button>
                           {/* <ButtonDecrement onClickFunc={decrementCounter} /> */}
                           {/* <ButtonDecrement disabled={disabled[i]} onClick = {() => decrementCounter(index)} /> */}
                           {/* <Display message={num[index]} /> */}
