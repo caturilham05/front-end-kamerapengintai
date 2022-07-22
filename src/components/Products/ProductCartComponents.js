@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Card, Col, Container, Row, Form, Button } from "react-bootstrap";
 import { FiTrash2 } from "react-icons/fi";
+import { FcLike } from "react-icons/fc";
 import axios from "axios";
 
 const api = "http://127.0.0.1:8000/";
@@ -9,6 +11,7 @@ const getIdUser = localStorage.getItem("id");
 
 function ProductCartComponents() {
   const [productCarts, setProductCarts] = useState([]);
+  const [totalCarts, setTotalCarts] = useState([]);
 
   const decrementCounter = async (cart_id) => {
     setProductCarts((productCarts) =>
@@ -21,6 +24,15 @@ function ProductCartComponents() {
           : item
       )
     );
+
+    setProductCarts((productCarts) =>
+      productCarts.map((item) =>
+        cart_id === item.id
+          ? { ...item, total_sale: item.sale * item.qty }
+          : item
+      )
+    );
+
     const data = {
       qty: 1,
     };
@@ -32,8 +44,8 @@ function ProductCartComponents() {
     await axios
       .post(api + "api/product_cart_decrement/" + cart_id, data, { headers })
       .then((res) => {
-        if(res.data.is_delete !== undefined)
-        {
+        if (res.data.is_delete !== undefined) {
+          alert(res.data.message);
           window.location.reload();
         }
       });
@@ -45,6 +57,15 @@ function ProductCartComponents() {
         cart_id === item.id ? { ...item, qty: item.qty + 1 } : item
       )
     );
+
+    setProductCarts((productCarts) =>
+      productCarts.map((item) =>
+        cart_id === item.id
+          ? { ...item, total_sale: item.sale * item.qty }
+          : item
+      )
+    );
+
     const data = {
       qty: 1,
     };
@@ -56,6 +77,20 @@ function ProductCartComponents() {
     await axios
       .post(api + "api/product_cart_increment/" + cart_id, data, { headers })
       .then((res) => {});
+  };
+
+  const deleteProductCart = async (cart_id) => {
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${getToken}`,
+    };
+
+    await axios
+      .delete(api + "api/product_cart/" + cart_id, { headers })
+      .then((res) => {
+        alert(res.data.message);
+        window.location.reload();
+      });
   };
 
   useEffect(() => {
@@ -78,6 +113,9 @@ function ProductCartComponents() {
   }, []);
 
   let priceRandom = Math.floor(Math.random() * 100000 + 1);
+  let totalCart = 0;
+  let grandTotalProducts = 0;
+  let discountAll = 0;
   return (
     <>
       {productCarts.length === 0 ? (
@@ -97,110 +135,133 @@ function ProductCartComponents() {
                   <b>Keranjang Belanja</b>
                 </Card.Header>
                 <Container>
-                  {productCarts.map((item, i) => (
-                    <Card.Body key={i}>
-                      <Row>
-                        <Col sm={4}>
-                          <div
-                            className="d-flex"
-                            style={{
-                              alignItems: "center",
-                              justifyContent: "flex-start",
-                            }}
-                          >
-                            <Form>
-                              <Form.Check />
-                            </Form>
-                            <Card.Img
-                              variant="top"
-                              src={
-                                item.image === ""
-                                  ? "https://kelembagaan.kemnaker.go.id/assets/img/no-image.svg"
-                                  : "http://kamerapengintai.com/images/modules/warehouse/product/" +
-                                    item.product_id +
-                                    "/" +
-                                    item.image
-                              }
-                              onError={(e) => {
-                                e.target.src =
-                                  "https://kelembagaan.kemnaker.go.id/assets/img/no-image.svg";
-                                e.target.onError = null;
-                              }}
+                  {productCarts.map((item, i) => {
+                    totalCart += item.qty;
+                    grandTotalProducts += item.total_sale;
+                    discountAll += item.discount;
+                    return (
+                      <Card.Body key={i}>
+                        <Row>
+                          <Col sm={4}>
+                            <div
+                              className="d-flex"
                               style={{
-                                width: "7.5rem",
-                                marginLeft: "1.5rem",
-                                cursor: "pointer",
+                                alignItems: "center",
+                                justifyContent: "flex-start",
                               }}
-                            ></Card.Img>
-                          </div>
-                        </Col>
-                        <Col sm={8}>
-                          <Card.Text>{item.title}</Card.Text>
-                          <Card.Text>
-                            <b>
-                              {item.sale === 1
-                                ? "Rp " +
-                                  priceRandom.toLocaleString(undefined, {
-                                    minimumFractionDigits: 2,
-                                  })
-                                : "Rp " +
-                                  item.sale.toLocaleString(undefined, {
-                                    minimumFractionDigits: 2,
-                                  })}
-                            </b>
-                          </Card.Text>
-                        </Col>
-                      </Row>
-                      <div
-                        className="d-flex"
-                        style={{
-                          margin: "1rem",
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <Form>
-                          <Form.Group
-                            className="mb-3"
-                            controlId="exampleForm.ControlTextarea1"
-                          >
-                            <Form.Control
-                              as="textarea"
-                              rows={2}
-                              placeholder="Catatan Tambahan (Pastikan tidak ada data pribadi)"
+                            >
+                              <Form>
+                                <Form.Check />
+                              </Form>
+                              <Card.Img
+                                variant="top"
+                                src={
+                                  item.image === ""
+                                    ? "https://kelembagaan.kemnaker.go.id/assets/img/no-image.svg"
+                                    : "http://kamerapengintai.com/images/modules/warehouse/product/" +
+                                      item.product_id +
+                                      "/" +
+                                      item.image
+                                }
+                                onError={(e) => {
+                                  e.target.src =
+                                    "https://kelembagaan.kemnaker.go.id/assets/img/no-image.svg";
+                                  e.target.onError = null;
+                                }}
+                                style={{
+                                  width: "7.5rem",
+                                  marginLeft: "1.5rem",
+                                  cursor: "pointer",
+                                }}
+                              ></Card.Img>
+                            </div>
+                          </Col>
+                          <Col sm={8}>
+                            <Link
+                              to={`/products/${item.product_id}`}
+                              style={{
+                                cursor: "pointer",
+                                textDecoration: "none",
+                                color: "#000",
+                              }}
+                            >
+                              {" "}
+                              <Card.Text>{item.title}</Card.Text>
+                            </Link>
+                            <Card.Text>
+                              <b>
+                                {item.sale === 1
+                                  ? "Rp " +
+                                    priceRandom.toLocaleString('id', {
+                                      minimumFractionDigits: 2,
+                                    })
+                                  : "Rp " +
+                                    item.sale.toLocaleString('id', {
+                                      minimumFractionDigits: 2,
+                                    })}
+                              </b>
+                            </Card.Text>
+                          </Col>
+                        </Row>
+                        <div
+                          className="d-flex"
+                          style={{
+                            margin: "1rem",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <Form>
+                            <Form.Group
+                              className="mb-3"
+                              controlId="exampleForm.ControlTextarea1"
+                            >
+                              <Form.Control
+                                as="textarea"
+                                rows={2}
+                                placeholder="Catatan Tambahan (Pastikan tidak ada data pribadi)"
+                              />
+                            </Form.Group>
+                          </Form>
+                          <span>
+                            Pindahkan ke Wishlist <FcLike /> |{" "}
+                            <FiTrash2
+                              onClick={() => deleteProductCart(item.id)}
+                              style={{ cursor: "pointer" }}
                             />
-                          </Form.Group>
-                        </Form>
-                        <span>
-                          Pindahkan ke Wishlist | <FiTrash2 />
-                        </span>
-                        <span>
-                          <button
-                            className="btn btn-secondary"
-                            style={{ marginLeft: "1rem", marginRight: "1rem" }}
-                            onClick={() => decrementCounter(item.id)}
-                            type="button"
-                          >
-                            -
-                          </button>
-                          <span>{item.qty}</span>
-                          <button
-                            className="btn btn-secondary"
-                            style={{ marginLeft: "1rem", marginRight: "1rem" }}
-                            onClick={() => incrementCounter(item.id)}
-                            type="button"
-                          >
-                            +
-                          </button>
-                          {/* <ButtonDecrement onClickFunc={decrementCounter} /> */}
-                          {/* <ButtonDecrement disabled={disabled[i]} onClick = {() => decrementCounter(index)} /> */}
-                          {/* <Display message={num[index]} /> */}
-                          {/* <span>{num[index]}</span> */}
-                          {/* <ButtonIncrement onClick = {() => incrementCounter(index)} /> */}
-                        </span>
-                      </div>
-                    </Card.Body>
-                  ))}
+                          </span>
+                          <span>
+                            <button
+                              className="btn btn-secondary"
+                              style={{
+                                marginLeft: "1rem",
+                                marginRight: "1rem",
+                              }}
+                              onClick={() => decrementCounter(item.id)}
+                              type="button"
+                            >
+                              -
+                            </button>
+                            <span>{item.qty}</span>
+                            <button
+                              className="btn btn-secondary"
+                              style={{
+                                marginLeft: "1rem",
+                                marginRight: "1rem",
+                              }}
+                              onClick={() => incrementCounter(item.id)}
+                              type="button"
+                            >
+                              +
+                            </button>
+                          </span>
+                        </div>
+                      </Card.Body>
+                    );
+                  })}
+                  {/* {productCarts.map((item, i) => (
+
+                  ))} */}
                 </Container>
               </Card>
             </Col>
@@ -213,20 +274,39 @@ function ProductCartComponents() {
                   <div
                     style={{ display: "flex", justifyContent: "space-between" }}
                   >
-                    Total Harga ({productCarts.length} Barang)
-                    <b>Rp 9.999.999</b>
+                    Total Harga ({totalCart} Qty)
+                    <b>
+                      Rp{" "}
+                      {grandTotalProducts.toLocaleString('id', {
+                        minimumFractionDigits: 2,
+                      })}
+                    </b>
                   </div>
                   <div
                     style={{ display: "flex", justifyContent: "space-between" }}
                   >
-                    Total Diskon <b>Rp 9.999.999</b>
+                    Total Diskon
+                    <b>
+                      Rp{" "}
+                      {discountAll.toLocaleString('id', {
+                        minimumFractionDigits: 2,
+                      })}
+                    </b>
                   </div>
                   <hr />
                   <div
                     style={{ display: "flex", justifyContent: "space-between" }}
                   >
                     Total Harga
-                    <b>Rp 9.999.999</b>
+                    <b>
+                      Rp{" "}
+                      {(grandTotalProducts - discountAll).toLocaleString(
+                        "id",
+                        {
+                          minimumFractionDigits: 2,
+                        }
+                      )}
+                    </b>
                   </div>
                 </Card.Body>
                 <Button
@@ -243,9 +323,7 @@ function ProductCartComponents() {
                   }}
                   {...(productCarts.length > 0 ? "" : { disabled: true })}
                 >
-                  <h5 style={{ marginTop: "5px" }}>
-                    Beli ({productCarts.length})
-                  </h5>
+                  <h5 style={{ marginTop: "5px" }}>Checkout</h5>
                 </Button>
               </Card>
             </Col>
