@@ -44,6 +44,7 @@ function RegisterComponents() {
                   type="text"
                   placeholder="Full Name"
                   onChange={(e) => setName(e.target.value)}
+                  required="required"
                 />
               </Form.Group>
 
@@ -53,6 +54,7 @@ function RegisterComponents() {
                   type="email"
                   placeholder="Email Address"
                   onChange={(e) => setEmail(e.target.value)}
+                  required="required"
                 />
               </Form.Group>
 
