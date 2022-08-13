@@ -18,11 +18,73 @@
   box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.2);
 }
 
-.text_product{
+.text_product {
   text-decoration: none;
   color: #6c6c6c;
   transition: "0.3s";
 }
+
 .text_product:hover {
   color: #222121;
+}
+
+.container-tabs {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  /* width: 500px; */
+  /* height: 300px; */
+  /* margin: 100px auto 0; */
+  word-break: break-all;
+}
+
+.block-tabs {
+  display: flex;
+  margin: 0rem 0rem 1rem 0rem;
+}
+
+.tabs {
+  padding: 1.5rem;
+  text-align: center;
+  /* width: 50%; */
+  cursor: pointer;
+  position: relative;
+  outline: none;
+  color: #6c6c6c;
+}
+
+.active-tabs {
+  color: #222121;
+  border-bottom: 2px solid #222121;
+}
+
+.content-tabs {
+  flex-grow: 1;
+}
+
+.content {
+  display: none;
+  background: white;
+  width: 100%;
+  height: 100%;
+}
+
+.active-content {
+  display: block;
+}
+
+.tab-data {
+  color: #6c6c6c;
+}
+
+.tab-data:hover {
+  color: #222121;
+  text-decoration: underline;
+}
+
+.card_profile {
+  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
+  border: none;
+  outline: none;
+  margin-bottom: 1rem;
 }
