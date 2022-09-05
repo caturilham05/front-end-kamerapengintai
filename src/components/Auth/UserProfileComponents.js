@@ -35,7 +35,9 @@ function UserProfileComponents() {
           setUser(data);
         })
         .catch((err) => {
-          console.log(err.message);
+          console.log(err.response)
+          const data = err.response.data;
+          setUser(data);
         });
     };
     getUser();

@@ -9,6 +9,7 @@ import ProductDetailComponents from "./components/Products/ProductDetailComponen
 import ProductRelatedComponents from "./components/Products/ProductRelatedComponents";
 import ProductCartComponents from "./components/Products/ProductCartComponents";
 import UserProfileComponents from "./components/Auth/UserProfileComponents";
+import ProductCartCheckoutComponents from "./components/Products/ProductCartCheckoutComponents";
 
 function App() {
   let { pathname } = useLocation();
@@ -23,6 +24,7 @@ function App() {
         <Route path="/products/:productId" element={<ProductDetailComponents />} />
         <Route path="/product_related/:catId" element={<ProductRelatedComponents />} />
         <Route path="/cart/:userId" element={<ProductCartComponents />} />
+        <Route path="/checkout" element={<ProductCartCheckoutComponents />} />
       </Routes>
     </div>
   );

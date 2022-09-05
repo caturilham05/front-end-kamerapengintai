@@ -45,62 +45,56 @@ function CategoryAllComponents() {
             >
               <Col sm={4}>
                 {categoryAll.slice(0, 3).map((item, index) => (
-                  <>
-                    <span
-                      key={index}
-                    >
+                  <div
+                    key={index}
+                  >
+                    <span>
                       <h5>{item.name}</h5>
                     </span>
                     {item.grouping_par_id?.map((item1, index1) => (
-                      <>
-                        <Link key={index1} to='/' className="text_product"
-                        >
-                          {item1.name}
-                          &nbsp;|&nbsp;
-                        </Link>
-                      </>
+                      <Link key={index1} to='/' className="text_product"
+                      >
+                        {item1.name}
+                        &nbsp;|&nbsp;
+                      </Link>
                     ))}
-                  </>
+                  </div>
                 ))}
               </Col>
               <Col sm={4}>
                 {categoryAll.slice(3, 6).map((item, index) => (
-                  <>
-                    <span
-                      key={index}
-                    >
+                  <div
+                    key={index}
+                  >
+                    <span>
                       <h5>{item.name}</h5>
                     </span>
                     {item.grouping_par_id?.map((item1, index1) => (
-                      <>
-                        <Link key={index1} to='/' className="text_product"
-                        >
-                          {item1.name}
-                          &nbsp;|&nbsp;
-                        </Link>
-                      </>
+                      <Link key={index1} to='/' className="text_product"
+                      >
+                        {item1.name}
+                        &nbsp;|&nbsp;
+                      </Link>
                     ))}
-                  </>
+                  </div>
                 ))}
               </Col>
               <Col sm={4}>
                 {categoryAll.slice(6, 9).map((item, index) => (
-                  <>
-                    <span
-                      key={index}
-                    >
+                  <div
+                    key={index}
+                  >
+                    <span>
                       <h5>{item.name}</h5>
                     </span>
                     {item.grouping_par_id?.map((item1, index1) => (
-                      <>
-                        <Link key={index1} to='/' className="text_product"
-                        >
-                          {item1.name}
-                          &nbsp;|&nbsp;
-                        </Link>
-                      </>
+                      <Link key={index1} to='/' className="text_product"
+                      >
+                        {item1.name}
+                        &nbsp;|&nbsp;
+                      </Link>
                     ))}
-                  </>
+                  </div>
                 ))}
               </Col>
             </Row>

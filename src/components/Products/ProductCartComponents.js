@@ -11,16 +11,15 @@ const getIdUser = localStorage.getItem("id");
 
 function ProductCartComponents() {
   const [productCarts, setProductCarts] = useState([]);
-  const [totalCarts, setTotalCarts] = useState([]);
 
   const decrementCounter = async (cart_id) => {
     setProductCarts((productCarts) =>
       productCarts.map((item) =>
         cart_id === item.id
           ? {
-              ...item,
-              qty: item.qty - (item.qty > 1 ? 1 : 0),
-            }
+            ...item,
+            qty: item.qty - (item.qty > 1 ? 1 : 0),
+          }
           : item
       )
     );
@@ -76,7 +75,7 @@ function ProductCartComponents() {
 
     await axios
       .post(api + "api/product_cart_increment/" + cart_id, data, { headers })
-      .then((res) => {});
+      .then((res) => { });
   };
 
   const deleteProductCart = async (cart_id) => {
@@ -106,7 +105,8 @@ function ProductCartComponents() {
           setProductCarts(data);
         })
         .catch((err) => {
-          console.log(err.message);
+          const data = err.response.data;
+          setProductCarts(data);
         });
     };
     getProducts();
@@ -118,11 +118,11 @@ function ProductCartComponents() {
   let discountAll = 0;
   return (
     <>
-      {productCarts.length === 0 ? (
+      {productCarts.result?.length === 0 ? (
         <center>
           <div style={{ marginTop: "5rem", marginBottom: "5rem" }}>
             <h1>
-              <b>Wah, keranjang belanjamu masih kosong.</b>
+              <b>{productCarts.message}</b>
             </h1>
           </div>
         </center>
@@ -159,9 +159,9 @@ function ProductCartComponents() {
                                   item.image === ""
                                     ? "https://kelembagaan.kemnaker.go.id/assets/img/no-image.svg"
                                     : "http://kamerapengintai.com/images/modules/warehouse/product/" +
-                                      item.product_id +
-                                      "/" +
-                                      item.image
+                                    item.product_id +
+                                    "/" +
+                                    item.image
                                 }
                                 onError={(e) => {
                                   e.target.src =
@@ -192,13 +192,13 @@ function ProductCartComponents() {
                               <b>
                                 {item.sale === 1
                                   ? "Rp " +
-                                    priceRandom.toLocaleString('id', {
-                                      minimumFractionDigits: 2,
-                                    })
+                                  priceRandom.toLocaleString('id', {
+                                    minimumFractionDigits: 2,
+                                  })
                                   : "Rp " +
-                                    item.sale.toLocaleString('id', {
-                                      minimumFractionDigits: 2,
-                                    })}
+                                  item.sale.toLocaleString('id', {
+                                    minimumFractionDigits: 2,
+                                  })}
                               </b>
                             </Card.Text>
                           </Col>
@@ -259,9 +259,6 @@ function ProductCartComponents() {
                       </Card.Body>
                     );
                   })}
-                  {/* {productCarts.map((item, i) => (
-
-                  ))} */}
                 </Container>
               </Card>
             </Col>
@@ -322,6 +319,7 @@ function ProductCartComponents() {
                     marginTop: "2rem",
                   }}
                   {...(productCarts.length > 0 ? "" : { disabled: true })}
+                  as={Link} to="/checkout"
                 >
                   <h5 style={{ marginTop: "5px" }}>Checkout</h5>
                 </Button>
