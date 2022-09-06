@@ -88,3 +88,15 @@
   outline: none;
   margin-bottom: 1rem;
 }
+
+.card_on_modal {
+  padding-top: 0.5rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  margin-bottom: 1rem; 
+}
+
+.card_on_modal:hover {
+  background-color: #959595;
+  color: #fff;
+}
