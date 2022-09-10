@@ -4,7 +4,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import "../style/Category.css";
 
-const api = "http://127.0.0.1:8000/";
+const api = "http://lara-kamerapengintai.my.id/";
 
 function CategoryAllComponents() {
   const [categoryAll, setCategoryAll] = useState([]);

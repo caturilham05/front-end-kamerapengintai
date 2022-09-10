@@ -13,7 +13,7 @@ import 'react-bootstrap-typeahead/css/Typeahead.css';
 import axios from "axios";
 
 
-const api = "http://127.0.0.1:8000/";
+const api = "http://lara-kamerapengintai.my.id/";
 const getToken = localStorage.getItem("token");
 const getIdUser = localStorage.getItem("id");
 

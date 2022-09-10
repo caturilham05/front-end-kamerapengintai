@@ -7,7 +7,7 @@ import { CgProfile } from "react-icons/cg";
 import { BsCart3 } from "react-icons/bs";
 import { MdOutlineEmail, MdNotificationsNone } from "react-icons/md";
 
-const apiPost = "http://127.0.0.1:8000/";
+const apiPost = "http://lara-kamerapengintai.my.id/";
 const getToken = localStorage.getItem("token");
 const getName = localStorage.getItem("name");
 const getId = localStorage.getItem("id");

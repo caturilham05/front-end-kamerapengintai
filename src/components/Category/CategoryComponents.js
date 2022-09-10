@@ -4,7 +4,7 @@ import axios from "axios";
 import ProductComponents from "../Products/ProductComponents";
 import "../style/Category.css";
 
-const api = "http://127.0.0.1:8000/";
+const api = "http://lara-kamerapengintai.my.id/";
 const getToken = localStorage.getItem("token");
 
 function CategoryComponents() {
