@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Card, Container, Form, Button } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import axios from "axios";
 import "../style/Login.css";
 
