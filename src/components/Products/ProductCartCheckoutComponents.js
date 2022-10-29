@@ -21,23 +21,51 @@ const getIdUser = localStorage.getItem("id");
 
 function ProductCartCheckoutComponents() {
   const [checkout, setCheckout] = useState([]);
+  const [useTax, setUseTax] = useState(true);
 
   useEffect(() => {
-    axios.get(api + "api/product_cart_checkout/" + getIdUser, {
-      headers: {
-        Authorization: `Bearer ${getToken}`,
-      }
-    })
-      .then((res) => {
-        const data = res.data.result
-        setCheckout(data)
-      })
-      .catch((err) => {
-        if (err.response.status !== 200) {
-          alert('Pengguna tidak ditemukan')
-        }
-      })
-  }, [])
+    const getProductCartCheckout = async () => {
+      await axios
+        .get(api + "api/product_cart_checkout/" + getIdUser, {
+          headers: {
+            Authorization: `Bearer ${getToken}`,
+          },
+        })
+        .then((res) => {
+          const data = res.data.result
+          setCheckout(data)
+        })
+        .catch((err) => {
+          if (err.response.status !== 200) {
+            alert('Pengguna tidak ditemukan')
+          }
+        })
+    };
+    getProductCartCheckout();
+  }, []);
+
+  const ProcessPaymentSubmit = async () => {
+    console.log(checkout)
+    let cart_ids = checkout.carts.filter(getIdCart => getIdCart.id).map(mapIdCart => mapIdCart.id)
+    let postPaymentMethod = checkout.payment_method.filter(getPaymentMethod => getPaymentMethod.title === changePayment)
+    if (selected[0] === undefined) {
+      alert('silahkan pilih ekspedisi')
+      return
+    }
+    if (postPaymentMethod.length === 0) {
+      alert('silahkan pilih metode pembayaran')
+      return
+    }
+    const data = {
+      address_id: checkout.newAddress === undefined ? checkout.user_address.id : checkout.newAddress.id,
+      cart_ids: JSON.stringify(cart_ids),
+      use_fp: useTax !== false ? 1 : 0,
+      shipping_name: selected[0],
+      payment_id: postPaymentMethod[0].id
+    }
+    console.log(data)
+  }
+
 
   const [show, setShow] = useState(false);
   const [showAddress, setShowAddress] = useState(false);
@@ -61,10 +89,11 @@ function ProductCartCheckoutComponents() {
   const [changePayment, setChangePayment] = useState('Pilih metode pembayaran');
 
   const InfoTax = () => {
+    const handleChange = () => { setUseTax(!useTax) }
     return (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <Form>
-          <Form.Check type='checkbox' label='Lampirkan Faktur Pajak' />
+          <Form.Check type='checkbox' label='Lampirkan Faktur Pajak' checked={useTax} onChange={handleChange} />
         </Form>
         <AiOutlineInfoCircle style={{ cursor: 'pointer' }} onClick={() => handleShow()} />
       </div>
@@ -73,16 +102,17 @@ function ProductCartCheckoutComponents() {
 
   const InfoAddress = () => {
     const { contextAddress } = useContext(RootContext)
+    let addressFinal = checkout.newAddress === undefined ? contextAddress : checkout.newAddress
     return (
       <>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Card.Text>Alamat Rumah</Card.Text>
           <Card.Text style={{ color: '#03AC0E', cursor: 'pointer' }} onClick={() => handleShowAddress()}><AiOutlineHome style={{ marginRight: '0.2rem', color: '#000' }} /> Ganti Alamat Rumah</Card.Text>
         </div>
-        <h5>{contextAddress && contextAddress.name}</h5>
-        <Card.Text>{contextAddress && contextAddress.address}, {contextAddress && contextAddress.location_name}</Card.Text>
-        <Card.Text>{contextAddress && contextAddress.description}</Card.Text>
-        <Card.Text>{contextAddress && contextAddress.phone}</Card.Text>
+        <h5>{addressFinal && addressFinal.name}</h5>
+        <Card.Text>{addressFinal && addressFinal.address}, {addressFinal && addressFinal.location_name}</Card.Text>
+        <Card.Text>{addressFinal && addressFinal.description}</Card.Text>
+        <Card.Text>{addressFinal && addressFinal.phone}</Card.Text>
       </>
     )
   }
@@ -131,6 +161,7 @@ function ProductCartCheckoutComponents() {
             borderColor: "#f0ffee",
             width: '30%'
           }}
+          onClick={() => ProcessPaymentSubmit()}
         >
           <span style={{ fontSize: '20px', margin: '5px 0' }}>Buat Pesanan</span>
         </Button>
@@ -279,26 +310,20 @@ function ProductCartCheckoutComponents() {
   let userAddress = checkout && checkout.user_address;
   const [contextAddress, setContextAddress] = useState({})
   useEffect(() => { setContextAddress(userAddress) })
-  let baru = '';
   const handleDispatchContext = (action, payload) => {
     switch (action) {
       case 'CHANGE_ADDRESS':
         let newAddress = payload.newAddress
         let newAddressId = payload.newAddress.id
-        setContextAddress((contextAddress) => {
-            let baru = contextAddress.id !== newAddressId && { ...contextAddress, newAddress }
-          }
-          );
-          return baru;
+        setCheckout((checkout) => {
+          return { ...checkout, newAddress }
+        })
         break;
 
       default:
         break;
     }
   }
-
-  console.log(baru)
-
   return (
     <>
       <Container style={{ marginTop: "2rem", marginBottom: "2rem" }}>
