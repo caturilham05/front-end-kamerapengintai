@@ -4,7 +4,7 @@ import { Link, Navigate } from "react-router-dom";
 import axios from "axios";
 import "../style/Login.css";
 
-const apiPost = "http://lara-kamerapengintai.my.id/";
+const apiPost = process.env.REACT_APP_API;
 
 function RegisterComponents() {
   const [name, setName] = useState("");

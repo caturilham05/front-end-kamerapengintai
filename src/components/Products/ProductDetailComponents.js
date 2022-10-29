@@ -15,7 +15,7 @@ import axios from "axios";
 import ProductRelatedComponents from "./ProductRelatedComponents";
 import "../style/Category.css";
 
-const api = "http://lara-kamerapengintai.my.id/";
+const api = process.env.REACT_APP_API;
 const getToken = localStorage.getItem("token");
 const getIdUser = localStorage.getItem("id");
 
@@ -83,7 +83,7 @@ function ProductDetailComponents() {
       alert(
         "Silahkan login terlebih dahulu untuk menambahkan produk ke keranjang"
       );
-      window.location.href = "/login";
+      window.location.href = "#/login";
       return true;
     }
     // eslint-disable-next-line eqeqeq

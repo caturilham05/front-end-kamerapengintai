@@ -5,7 +5,7 @@ import { FiTrash2 } from "react-icons/fi";
 import { FcLike } from "react-icons/fc";
 import axios from "axios";
 
-const api = "http://lara-kamerapengintai.my.id/";
+const api = process.env.REACT_APP_API;
 const getToken = localStorage.getItem("token");
 const getIdUser = localStorage.getItem("id");
 

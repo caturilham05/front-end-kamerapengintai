@@ -15,7 +15,7 @@ import PaymentComponents from "../Profile/PaymentComponents";
 import NotificationComponents from "../Profile/NotificationComponents";
 import BiodataStoreComponents from "../Profile/BiodataStoreComponents";
 
-const api = "http://lara-kamerapengintai.my.id/";
+const api = process.env.REACT_APP_API;
 const getToken = localStorage.getItem("token");
 
 function UserProfileComponents() {

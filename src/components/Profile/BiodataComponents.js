@@ -12,27 +12,24 @@ import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import axios from "axios";
 
-const api = "http://lara-kamerapengintai.my.id/";
+const api = process.env.REACT_APP_API;
 const getToken = localStorage.getItem("token");
 
 function BiodataComponents(props) {
   const [recipient, setRecipient] = useState([])
   useEffect(() => {
     if (props.userId !== 'undefined') {
-      const getUsers = async () => {
-        await axios.get(api + "api/recipient_detail/" + props.email, {
-          headers: {
-            Authorization: `Bearer ${getToken}`
-          }
+      axios.get(api + "api/recipient_detail/" + props.email, {
+        headers: {
+          Authorization: `Bearer ${getToken}`
+        }
+      })
+        .then((res) => {
+          setRecipient(res.data.result)
         })
-          .then((res) => {
-            setRecipient(res.data.result)
-          })
-          .catch((err) => {
-            console.log(err)
-          })
-      }
-      getUsers()
+        .catch((err) => {
+          console.log(err.response.status)
+        })
     }
   }, [props.email])
 
@@ -51,7 +48,7 @@ function BiodataComponents(props) {
             (
               <div style={{ marginBottom: '1rem', fontWeight: '600', fontSize: '1.5rem' }}>
                 {
-                  recipient.approved === 1 ? (<span style={{color: '#ff9500'}}>Akun anda dalam proses verifikasi</span>) : (recipient.approved === 2 ? (<span style={{color: '#03AC0E'}}>Akun Terverifikasi</span>) : (<span style={{color: '#c63232'}}>Akun anda gagal dalam proses verifikasi</span>))
+                  recipient.approved === 1 ? (<span style={{ color: '#ff9500' }}>Akun anda dalam proses verifikasi</span>) : (recipient.approved === 2 ? (<span style={{ color: '#03AC0E' }}>Akun Terverifikasi</span>) : (<span style={{ color: '#c63232' }}>Akun anda gagal dalam proses verifikasi</span>))
                 }
               </div>
 

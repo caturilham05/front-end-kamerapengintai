@@ -5,7 +5,7 @@ import ReactPaginate from "react-paginate";
 import { Link } from "react-router-dom";
 import "../style/Category.css";
 
-const api = "http://lara-kamerapengintai.my.id/";
+const api = process.env.REACT_APP_API;
 const getToken = localStorage.getItem("token");
 
 function ProductComponents() {

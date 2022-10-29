@@ -4,7 +4,7 @@ import axios from "axios";
 import { Link, useLocation } from "react-router-dom";
 import "../style/Category.css";
 
-const api = "http://lara-kamerapengintai.my.id/";
+const api = process.env.REACT_APP_API;
 
 function ProductRelatedComponents(props) {
   const [productRelated, setProductRelated] = useState([]);

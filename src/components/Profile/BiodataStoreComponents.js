@@ -11,27 +11,24 @@ import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import axios from "axios";
 
-const api = "http://lara-kamerapengintai.my.id/";
+const api = process.env.REACT_APP_API;
 const getToken = localStorage.getItem("token");
 
 function BiodataStoreComponents(props) {
   const [recipient, setRecipient] = useState([])
   useEffect(() => {
     if (props.userId !== 'undefined') {
-      const getUsers = async () => {
-        await axios.get(api + "api/recipient_detail/" + props.email, {
-          headers: {
-            Authorization: `Bearer ${getToken}`
-          }
+      axios.get(api + "api/recipient_detail/" + props.email, {
+        headers: {
+          Authorization: `Bearer ${getToken}`
+        }
+      })
+        .then((res) => {
+          setRecipient(res.data.result)
         })
-          .then((res) => {
-            setRecipient(res.data.result)
-          })
-          .catch((err) => {
-            console.log(err)
-          })
-      }
-      getUsers()
+        .catch((err) => {
+          console.log(err.response.status)
+        })
     }
   }, [props.email])
 

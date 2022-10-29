@@ -10,6 +10,7 @@ import ProductRelatedComponents from "./components/Products/ProductRelatedCompon
 import ProductCartComponents from "./components/Products/ProductCartComponents";
 import UserProfileComponents from "./components/Auth/UserProfileComponents";
 import ProductCartCheckoutComponents from "./components/Products/ProductCartCheckoutComponents";
+import "./App.css";
 
 function App() {
   let { pathname } = useLocation();
