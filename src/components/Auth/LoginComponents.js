@@ -10,22 +10,25 @@ function LoginComponents() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    axios.post(apiPost + "api/login", {
+    await axios.post(apiPost + "api/login", {
       email: email,
       password: password
     })
-    .then(json => {
-      if (json.data.status === "success") {
-        localStorage.setItem("id", json.data.data.id);
-        localStorage.setItem("token", json.data.access_token);
-        localStorage.setItem("name", json.data.data.name);
-        window.location.href = "/";
-      } else {
-        alert("Login Failed");
-      }
-    })
+      .then(json => {
+        if (json.data.status === "success") {
+          localStorage.setItem("id", json.data.data.id);
+          localStorage.setItem("token", json.data.access_token);
+          localStorage.setItem("name", json.data.data.name);
+          window.location.href = "/";
+        }
+      })
+      .catch((err) => {
+        if (err.response.status != 200) {
+          alert(err.response.data.message)
+        }
+      })
   };
 
   return (
